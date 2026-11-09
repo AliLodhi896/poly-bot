@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* Polybot — live rewards terminal. */
+@theme {
+  --color-base: #050505;
+  --color-surface: #09090a;
+  --color-panel: #101011;
+  --color-panel-2: #171719;
+  --color-line: #242427;
+  --color-line-strong: #38383c;
+
+  --color-foreground: #f1f1ef;
+  --color-muted: #a1a19d;
+  --color-faint: #696966;
+
+  --color-gold: #d8c78d;
+  --color-gold-soft: #eadcad;
+
+  /* Polymarket-leaning accent: electric blue + violet, with a cyan highlight. */
+  --color-accent: #5b8cff;
+  --color-accent-soft: #8aa7ff;
+  --color-accent-strong: #3f6cff;
+  --color-violet: #9d8bff;
+  --color-cyan: #5fd0e6;
+
+  --color-blue: #8aa7ff;
+  --color-info: #9a9a96;
+  --color-profit: #72d6a2;
+  --color-loss: #f16f7f;
+  --color-warn: #e6b45c;
+
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+  --font-display: var(--font-space-grotesk), var(--font-plex-sans), sans-serif;
+
+  --radius-panel: 8px;
+}
+
+html {
+  background: var(--color-base);
+  color-scheme: dark;
+}
+
+body {
+  background:
+    linear-gradient(180deg, #080808 0%, var(--color-base) 48%, #020202 100%);
+  background-attachment: fixed;
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* tabular figures for all data/numbers */
+.tnum {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0;
+}
+
+/* eyebrow / label style used across the UI */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+  border-radius: 8px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-grid {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 78%);
+}
+
+.ghost-panel {
+  border: 1px solid rgba(241, 241, 239, 0.055);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(241, 241, 239, 0.052), rgba(241, 241, 239, 0.014)),
+    rgba(5, 5, 5, 0.62);
+  padding: 16px;
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.42);
+}
+
+.ghost-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.62) 100%);
+}
+
+.ghost-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(70, 192, 138, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(70, 192, 138, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(70, 192, 138, 0);
+  }
+}
+.live-dot {
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+@keyframes row-flash {
+  from {
+    background: rgba(232, 163, 61, 0.12);
+  }
+  to {
+    background: transparent;
+  }
+}
+.row-flash {
+  animation: row-flash 1.1s ease-out;
+}
+
+/* Animated mesh background — slow drifting gradient orbs (Polymarket-leaning blue/violet). */
+@keyframes mesh-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -4%, 0) scale(1.12); }
+}
+@keyframes mesh-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-7%, 5%, 0) scale(1); }
+}
+@keyframes mesh-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5%, 6%, 0) scale(1.1); }
+}
+.mesh-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Rotating rim for the stardust CTA. */
+@keyframes spin-360 {
+  to { transform: rotate(360deg); }
+}
+
+/* Shimmer for loading skeleton rows. */
+@keyframes shimmer {
+  0% { background-position: -480px 0; }
+  100% { background-position: 480px 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(241, 241, 239, 0.04) 0%,
+    rgba(241, 241, 239, 0.09) 50%,
+    rgba(241, 241, 239, 0.04) 100%
+  );
+  background-size: 960px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Soft entrance for table rows. */
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Skill rule: respect prefers-reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
